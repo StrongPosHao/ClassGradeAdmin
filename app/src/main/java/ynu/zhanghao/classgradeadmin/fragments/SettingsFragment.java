@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import ynu.zhanghao.classgradeadmin.R;
-import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent;
-import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
+import ynu.zhanghao.classgradeadmin.db.TeacherContent;
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +28,11 @@ public class SettingsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private static List<TeacherContent.TeacherItem> teacherList;
+
+    public static void setTeacherList(List<TeacherContent.TeacherItem> value) {
+        teacherList = value;
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -68,7 +74,7 @@ public class SettingsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MySettingsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MySettingsRecyclerViewAdapter(teacherList, mListener));
         }
         return view;
     }
@@ -103,6 +109,6 @@ public class SettingsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(TeacherContent.TeacherItem item);
     }
 }

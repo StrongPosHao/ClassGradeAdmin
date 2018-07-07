@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ynu.zhanghao.classgradeadmin.R;
+import ynu.zhanghao.classgradeadmin.db.TeacherContent;
 import ynu.zhanghao.classgradeadmin.fragments.SettingsFragment.OnListFragmentInteractionListener;
 import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
 
@@ -19,10 +20,10 @@ import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
  */
 public class MySettingsRecyclerViewAdapter extends RecyclerView.Adapter<MySettingsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<TeacherContent.TeacherItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MySettingsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MySettingsRecyclerViewAdapter(List<TeacherContent.TeacherItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,8 +38,8 @@ public class MySettingsRecyclerViewAdapter extends RecyclerView.Adapter<MySettin
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getTeacherNo());
+        holder.mContentView.setText(mValues.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +62,7 @@ public class MySettingsRecyclerViewAdapter extends RecyclerView.Adapter<MySettin
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public TeacherContent.TeacherItem mItem;
 
         public ViewHolder(View view) {
             super(view);

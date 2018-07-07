@@ -1,5 +1,8 @@
 package ynu.zhanghao.classgradeadmin;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
@@ -17,20 +21,22 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import ynu.zhanghao.classgradeadmin.db.CourseContent;
+import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.db.MyDatabaseHelper;
+import ynu.zhanghao.classgradeadmin.db.StudentScoreItem;
+import ynu.zhanghao.classgradeadmin.db.TeacherContent;
 import ynu.zhanghao.classgradeadmin.fragments.ScoreFragment;
 import ynu.zhanghao.classgradeadmin.fragments.SettingsFragment;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment;
-import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
         implements SettingsFragment.OnListFragmentInteractionListener,
         TeacherClassFragment.OnListFragmentInteractionListener,
-        ScoreFragment.OnListFragmentInteractionListener,
-        TemporaryFragment.OnListFragmentInteractionListener {
+        ScoreFragment.OnListFragmentInteractionListener {
 
     MyDatabaseHelper dbHelper;
+
+    private SQLiteDatabase db;
 
     private BottomNavigationBar navigationBar;
 
@@ -40,13 +46,16 @@ public class MainActivity extends AppCompatActivity
 
     private List<Fragment> fragmentList;
 
+    private List<CourseItem> courseItemList;
+
+    private List<StudentScoreItem> studentScoreItemList;
+
     FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createDatabase();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -87,6 +96,22 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getSupportFragmentManager();
 
         ShowFragment(0);
+
+
+        createDatabase();
+        insertStudentData();
+        insertCourseData();
+        insertStudentCourseData();
+        courseItemList = listAllCourseData();
+        TeacherClassFragment.setCourseItemList(courseItemList);
+
+        studentScoreItemList = listAllStudentScore();
+        Log.d("D", Integer.toString(courseItemList.size()));
+        ScoreFragment.setStudentScoreItems(studentScoreItemList);
+
+
+//        List<TeacherContent.TeacherItem> teacherItemList = listAllData();
+//        SettingsFragment.setTeacherList(teacherItemList);
     }
 
     private void ShowFragment(int position) {
@@ -98,7 +123,74 @@ public class MainActivity extends AppCompatActivity
 
     public void createDatabase() {
         dbHelper = new MyDatabaseHelper(this, "CourseAdmin.db", null, 1);
-        dbHelper.getWritableDatabase();
+        db = dbHelper.getWritableDatabase();
+    }
+
+    public void insertCourseData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 5; i++) {
+            values.put("courseNo", i);
+            values.put("name", "course" + i);
+            values.put("capacity", 50);
+            db.insert("course", null, values);
+            values.clear();
+        }
+    }
+
+    public void insertStudentData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 5; i++) {
+            values.put("studentNo", i);
+            values.put("name", "ZhangHao");
+            values.put("gender", "male");
+            values.put("age", 18);
+            values.put("grade", "2015");
+            db.insert("student", null, values);
+            values.clear();
+        }
+    }
+
+    public void insertStudentCourseData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 5; i++) {
+            values.put("courseNo", 1);
+            values.put("studentNo", i);
+            values.put("score", Integer.toString((i + 60)));
+            db.insert("enroll", null, values);
+            values.clear();
+        }
+    }
+
+    public List<CourseItem> listAllCourseData() {
+        Cursor cursor = db.query("course", null, null, null, null, null, null);
+        List<CourseItem> courseItemList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                String courseNo = cursor.getString(cursor.getColumnIndex("courseNo"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
+                CourseItem courseItem = new CourseItem(courseNo, name, capacity);
+                courseItemList.add(courseItem);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return courseItemList;
+    }
+
+    public List<StudentScoreItem> listAllStudentScore() {
+        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
+        List<StudentScoreItem> studentScoreItemList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                String courseNo = cursor.getString(cursor.getColumnIndex("courseNo"));
+                String studentNo = cursor.getString(cursor.getColumnIndex("studentNo"));
+                int score = cursor.getInt(cursor.getColumnIndex("score"));
+                StudentScoreItem studentScoreItem = new StudentScoreItem(courseNo, studentNo, score);
+                studentScoreItemList.add(studentScoreItem);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return studentScoreItemList;
     }
 
     @Override
@@ -113,17 +205,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(CourseItem courseItem) {
 
     }
 
     @Override
-    public void onListFragmentInteraction(CourseContent.CourseItem courseItem) {
+    public void onListFragmentInteraction(TeacherContent.TeacherItem item) {
 
     }
 
     @Override
-    public void onListFragmentInteraction(ynu.zhanghao.classgradeadmin.dummy.DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(StudentScoreItem course) {
 
     }
 }

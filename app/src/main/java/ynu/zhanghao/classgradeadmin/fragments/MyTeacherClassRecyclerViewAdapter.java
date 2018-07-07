@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ynu.zhanghao.classgradeadmin.R;
-import ynu.zhanghao.classgradeadmin.db.CourseContent;
+import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment.OnListFragmentInteractionListener;
 import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
 
@@ -21,10 +21,10 @@ import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
  */
 public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTeacherClassRecyclerViewAdapter.ViewHolder> {
 
-    private final List<CourseContent.CourseItem> mValues;
+    private final List<CourseItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTeacherClassRecyclerViewAdapter(List<CourseContent.CourseItem> items, OnListFragmentInteractionListener listener) {
+    public MyTeacherClassRecyclerViewAdapter(List<CourseItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -66,7 +66,7 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         public final TextView mIdView;
         public final TextView mContentView;
         public final TextView mCapacityView;
-        public CourseContent.CourseItem mItem;
+        public CourseItem mItem;
 
         public ViewHolder(View view) {
             super(view);

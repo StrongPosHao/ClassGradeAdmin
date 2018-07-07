@@ -1,5 +1,6 @@
 package ynu.zhanghao.classgradeadmin.fragments;
 
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ynu.zhanghao.classgradeadmin.R;
-import ynu.zhanghao.classgradeadmin.db.CourseContent;
+import ynu.zhanghao.classgradeadmin.db.StudentScoreItem;
 import ynu.zhanghao.classgradeadmin.fragments.ScoreFragment.OnListFragmentInteractionListener;
 import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
 
@@ -20,10 +21,11 @@ import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
  */
 public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecyclerViewAdapter.ViewHolder> {
 
-    private final List<CourseContent.CourseItem> mValues;
+    private final List<StudentScoreItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyScoreRecyclerViewAdapter(List<CourseContent.CourseItem> items, OnListFragmentInteractionListener listener) {
+
+    public MyScoreRecyclerViewAdapter(List<StudentScoreItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,11 +37,12 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getCourseNo());
-        holder.mContentView.setText(mValues.get(position).getName());
+        holder.mIdView.setText(mValues.get(position).getStudentNo());
+        holder.mContentView.setText(Integer.toString(mValues.get(position).getScore()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +65,7 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public CourseContent.CourseItem mItem;
+        public StudentScoreItem mItem;
 
         public ViewHolder(View view) {
             super(view);

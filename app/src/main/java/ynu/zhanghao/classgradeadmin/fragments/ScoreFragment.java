@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import ynu.zhanghao.classgradeadmin.R;
-import ynu.zhanghao.classgradeadmin.db.CourseContent;
+import ynu.zhanghao.classgradeadmin.db.StudentScoreItem;
 
 /**
  * A fragment representing a list of Items.
@@ -26,6 +28,12 @@ public class ScoreFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private static List<StudentScoreItem> studentScoreItems;
+
+    public static void setStudentScoreItems(List<StudentScoreItem> value) {
+        studentScoreItems = value;
+    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,7 +75,7 @@ public class ScoreFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyScoreRecyclerViewAdapter(CourseContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyScoreRecyclerViewAdapter(studentScoreItems, mListener));
         }
         return view;
     }
@@ -102,6 +110,6 @@ public class ScoreFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(CourseContent.CourseItem course);
+        void onListFragmentInteraction(StudentScoreItem course);
     }
 }
