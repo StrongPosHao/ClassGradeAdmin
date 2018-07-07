@@ -1,9 +1,11 @@
 package ynu.zhanghao.classgradeadmin;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -98,11 +100,19 @@ public class MainActivity extends AppCompatActivity
 
         ShowFragment(0);
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                startActivity(intent);
+            }
+        });
 
         createDatabase();
-        insertStudentData();
-        insertCourseData();
-        insertStudentCourseData();
+//        insertStudentData();
+//        insertCourseData();
+//        insertStudentCourseData();
         courseItemList = listAllCourseData();
         TeacherClassFragment.setCourseItemList(courseItemList);
 
@@ -176,14 +186,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     public List<StudentScoreItem> listAllStudentScore() {
-        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM enroll, student, course WHERE" +
+                " enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
+//        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
         List<StudentScoreItem> studentScoreItemList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                String courseNo = cursor.getString(cursor.getColumnIndex("courseNo"));
-                String studentNo = cursor.getString(cursor.getColumnIndex("studentNo"));
+                String courseNo = cursor.getString(cursor.getColumnIndex("enroll.courseNo"));
+                String studentNo = cursor.getString(cursor.getColumnIndex("enroll.studentNo"));
+                String courseName = cursor.getString(cursor.getColumnIndex("course.name"));
+                String studentName = cursor.getString(cursor.getColumnIndex("student.name"));
                 int score = cursor.getInt(cursor.getColumnIndex("score"));
-                StudentScoreItem studentScoreItem = new StudentScoreItem(courseNo, studentNo, score);
+                StudentScoreItem studentScoreItem = new StudentScoreItem(studentNo, courseNo,
+                        studentName, courseName, score);
                 studentScoreItemList.add(studentScoreItem);
             } while (cursor.moveToNext());
         }
@@ -208,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(CourseItem courseItem) {
-        Toast.makeText(this.getApplicationContext(), "Selected", Toast.LENGTH_SHORT);
+
     }
 
     @Override

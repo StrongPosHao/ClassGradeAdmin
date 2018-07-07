@@ -25,6 +25,7 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
     private final OnListFragmentInteractionListener mListener;
 
 
+
     public MyScoreRecyclerViewAdapter(List<StudentScoreItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
