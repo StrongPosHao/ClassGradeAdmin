@@ -32,7 +32,7 @@ import ynu.zhanghao.classgradeadmin.fragments.ScoreFragment;
 import ynu.zhanghao.classgradeadmin.fragments.SettingsFragment;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements SettingsFragment.OnListFragmentInteractionListener,
         TeacherClassFragment.OnListFragmentInteractionListener,
         ScoreFragment.OnListFragmentInteractionListener {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public List<CourseItem> listAllCourseData() {
+    public static List<CourseItem> listAllCourseData() {
         Cursor cursor = db.query("course", null, null, null, null, null, null);
         List<CourseItem> courseItemList = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -217,8 +217,27 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+//    public void removeItem(int position) {
+//        List<CourseItem> mValues = ;
+//        CourseItem courseItem = mValues.get(position);
+//        SQLiteDatabase db = MainActivity.getDb();
+//        db.delete("Course", "courseNo = ?", new String[]{courseItem.getCourseNo()});
+//        db.close();
+//        mValues.remove(position);
+//        notifyItemRemoved(position);
+//    }
+//
+//    public void changeItem(int position) {
+//        CourseItem courseItem = mValues.get(position);
+//        Intent intent = new Intent(MyApplication.th)
+//    }
+
     public static SQLiteDatabase getDb() {
         return db;
+    }
+
+    public AppCompatActivity getMainActivity() {
+        return MainActivity.this;
     }
 
     @Override

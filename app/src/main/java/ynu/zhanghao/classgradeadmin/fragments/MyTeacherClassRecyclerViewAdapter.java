@@ -1,7 +1,9 @@
 package ynu.zhanghao.classgradeadmin.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.ActivityCollector;
+import ynu.zhanghao.classgradeadmin.ChangeActivity;
 import ynu.zhanghao.classgradeadmin.MainActivity;
 import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
@@ -84,10 +88,21 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         CourseItem courseItem = mValues.get(position);
         SQLiteDatabase db = MainActivity.getDb();
         db.delete("Course", "courseNo = ?", new String[]{courseItem.getCourseNo()});
+        db.close();
         mValues.remove(position);
         notifyItemRemoved(position);
-
     }
+
+    public void changeItem(int position) {
+        CourseItem courseItem = mValues.get(position);
+        Activity nowActivity = ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
+        Intent intent = new Intent(nowActivity, ChangeActivity.class);
+        intent.putExtra("courseNo", courseItem.getCourseNo());
+        intent.putExtra("courseName", courseItem.getName());
+        intent.putExtra("capacity", courseItem.getCapacity());
+        nowActivity.startActivity(intent);
+    }
+
 
     public void showPopMenu(View view, final int pos) {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
@@ -95,7 +110,14 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                MyTeacherClassRecyclerViewAdapter.this.removeItem(pos);
+                switch (item.getItemId()) {
+                    case R.id.removeItem:
+                        MyTeacherClassRecyclerViewAdapter.this.removeItem(pos); break;
+                    case R.id.changeItem:
+                        MyTeacherClassRecyclerViewAdapter.this.changeItem(pos); break;
+                }
+
+
                 return false;
             }
         });
