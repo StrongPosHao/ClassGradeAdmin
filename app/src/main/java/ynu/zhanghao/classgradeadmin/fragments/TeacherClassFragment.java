@@ -3,16 +3,17 @@ package ynu.zhanghao.classgradeadmin.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.MyApplication;
 import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
 
@@ -55,10 +56,8 @@ public class TeacherClassFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Notice!!!!!!!!!", "onCreate: ???");
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            Log.d("Notice!!!!!!!!!", "onCreate: "+String.valueOf(mColumnCount));
         }
     }
 
@@ -71,6 +70,7 @@ public class TeacherClassFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.addItemDecoration(new DividerItemDecoration(MyApplication.getContext(), DividerItemDecoration.VERTICAL));
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

@@ -1,14 +1,21 @@
 package ynu.zhanghao.classgradeadmin.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.MainActivity;
 import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment.OnListFragmentInteractionListener;
@@ -23,7 +30,7 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
 
     private final List<CourseItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-
+    private Context mContext;
     public MyTeacherClassRecyclerViewAdapter(List<CourseItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
@@ -33,8 +40,10 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_teacherclass, parent, false);
+//        final ViewHolder holder = new ViewHolder(view);
         return new ViewHolder(view);
     }
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -42,6 +51,7 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getCourseNo());
         holder.mContentView.setText(mValues.get(position).getName());
+
 //        Log.d("E", mValues.get(position).getCapacity());
         holder.mCapacityView.setText(Integer.toString(mValues.get(position).getCapacity()));
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +61,16 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
+                    Log.d("C", mListener.toString());
+                    Toast.makeText(v.getContext(), "Selected", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showPopMenu(v, holder.getAdapterPosition());
+                return false;
             }
         });
     }
@@ -60,6 +79,29 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
     public int getItemCount() {
         return mValues.size();
     }
+
+    public void removeItem(int position) {
+        CourseItem courseItem = mValues.get(position);
+        SQLiteDatabase db = MainActivity.getDb();
+        db.delete("Course", "courseNo = ?", new String[]{courseItem.getCourseNo()});
+        mValues.remove(position);
+        notifyItemRemoved(position);
+
+    }
+
+    public void showPopMenu(View view, final int pos) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_item, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                MyTeacherClassRecyclerViewAdapter.this.removeItem(pos);
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
@@ -81,4 +123,5 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
             return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
+
 }

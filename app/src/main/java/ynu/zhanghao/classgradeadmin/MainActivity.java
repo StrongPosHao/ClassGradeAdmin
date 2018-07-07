@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity
 
     MyDatabaseHelper dbHelper;
 
-    private SQLiteDatabase db;
+    private static SQLiteDatabase db;
 
     private BottomNavigationBar navigationBar;
 
@@ -109,9 +110,6 @@ public class MainActivity extends AppCompatActivity
         Log.d("D", Integer.toString(courseItemList.size()));
         ScoreFragment.setStudentScoreItems(studentScoreItemList);
 
-
-//        List<TeacherContent.TeacherItem> teacherItemList = listAllData();
-//        SettingsFragment.setTeacherList(teacherItemList);
     }
 
     private void ShowFragment(int position) {
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void createDatabase() {
-        dbHelper = new MyDatabaseHelper(this, "CourseAdmin.db", null, 1);
+        dbHelper = new MyDatabaseHelper(this, "CourseAdmin.db", null, 2);
         db = dbHelper.getWritableDatabase();
     }
 
@@ -204,9 +202,13 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public static SQLiteDatabase getDb() {
+        return db;
+    }
+
     @Override
     public void onListFragmentInteraction(CourseItem courseItem) {
-
+        Toast.makeText(this.getApplicationContext(), "Selected", Toast.LENGTH_SHORT);
     }
 
     @Override

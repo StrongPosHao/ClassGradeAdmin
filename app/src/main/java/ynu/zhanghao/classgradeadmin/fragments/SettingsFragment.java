@@ -3,6 +3,7 @@ package ynu.zhanghao.classgradeadmin.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.MyApplication;
 import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.TeacherContent;
 
@@ -69,6 +71,7 @@ public class SettingsFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.addItemDecoration(new DividerItemDecoration(MyApplication.getContext(), DividerItemDecoration.VERTICAL));
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
