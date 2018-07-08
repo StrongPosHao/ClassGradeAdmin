@@ -41,7 +41,7 @@ public class AddActivity extends AppCompatActivity {
             SQLiteDatabase db = MainActivity.getDb();
             ContentValues values = new ContentValues();
             values.put("courseNo", courseNo);
-            values.put("name", courseName);
+            values.put("courseName", courseName);
             values.put("capacity", capacity);
             db.insert("course", null, values);
             db.close();
@@ -64,7 +64,9 @@ public class AddActivity extends AppCompatActivity {
                 String studentName = studentNameText.getText().toString();
                 int studentScore = Integer.parseInt(studentScoreText.getText().toString());
                 SQLiteDatabase db = MainActivity.getDb();
-                Cursor cursor = db.rawQuery("SELECT * FROM student WHERE student.studentNo = ?", new String[]{studentNo});
+                Cursor cursor = db.rawQuery("SELECT * FROM student WHERE" +
+                        " student.studentNo = ? AND student.studentName = ?",
+                        new String[]{studentNo, studentName});
                 if (cursor.moveToFirst()) {
                     ContentValues values = new ContentValues();
                     values.put("studentNo", studentNo);
@@ -76,7 +78,7 @@ public class AddActivity extends AppCompatActivity {
                     Intent intent = new Intent(AddActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(AddActivity.this, "该学生不存在！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddActivity.this, "该学生不存在！请检查输入是否正确。", Toast.LENGTH_SHORT).show();
                 }
             }
         });

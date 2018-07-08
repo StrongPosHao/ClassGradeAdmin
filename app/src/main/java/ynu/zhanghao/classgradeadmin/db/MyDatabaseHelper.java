@@ -16,12 +16,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_COURSE = "CREATE TABLE IF NOT EXISTS course("
             + "courseNo INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "name VARCHAR(20), "
+            + "courseName VARCHAR(20), "
             + "capacity INTEGER);";
 
     private static final String CREATE_STUDENT = "CREATE TABLE IF NOT EXISTS student("
             + "studentNo CHAR(11) PRIMARY KEY, "
-            + "name VARCHAR(10), "
+            + "studentName VARCHAR(10), "
             + "gender VARCHAR(4), "
             + "age INTEGER, "
             + "grade CHAR(4))";

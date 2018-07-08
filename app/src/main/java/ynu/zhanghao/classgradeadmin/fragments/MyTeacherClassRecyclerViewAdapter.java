@@ -63,9 +63,11 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
-//                    MainActivity mainActivity = (MainActivity) ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
-//                    mainActivity.ShowFragment(1);
-
+                    MainActivity mainActivity = (MainActivity) ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
+                    String courseNo = holder.mItem.getCourseNo();
+                    ScoreFragment.setStudentScoreItems(mainActivity.listAllStudentScore(courseNo));
+                    mainActivity.getNavigationBar().selectTab(1);
+                    mainActivity.ShowFragment(1);
                 }
             }
         });
@@ -87,7 +89,6 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         CourseItem courseItem = mValues.get(position);
         SQLiteDatabase db = MainActivity.getDb();
         db.delete("Course", "courseNo = ?", new String[]{courseItem.getCourseNo()});
-        db.close();
         mValues.remove(position);
         notifyItemRemoved(position);
     }
@@ -99,7 +100,9 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         intent.putExtra("courseNo", courseItem.getCourseNo());
         intent.putExtra("courseName", courseItem.getName());
         intent.putExtra("capacity", courseItem.getCapacity());
+        intent.putExtra("fragmentId", 1);
         nowActivity.startActivity(intent);
+        notifyDataSetChanged();
     }
 
 

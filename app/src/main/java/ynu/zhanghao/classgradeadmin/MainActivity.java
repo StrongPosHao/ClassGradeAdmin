@@ -1,6 +1,5 @@
 package ynu.zhanghao.classgradeadmin;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -41,17 +40,19 @@ public class MainActivity extends BaseActivity
 
     private static SQLiteDatabase db;
 
-    private BottomNavigationBar navigationBar;
+    protected BottomNavigationBar navigationBar;
 
     private DrawerLayout drawerLayout;
 
-    private Toolbar toolbar;
+    protected Toolbar toolbar;
 
     private List<Fragment> fragmentList;
 
-    private List<CourseItem> courseItemList;
+    protected List<CourseItem> courseItemList;
 
-    private List<StudentScoreItem> studentScoreItemList;
+    protected List<StudentScoreItem> studentScoreItemList;
+
+    ScoreFragment scoreFragment = ScoreFragment.newInstance(1);
 
     FragmentManager fragmentManager;
 
@@ -93,12 +94,18 @@ public class MainActivity extends BaseActivity
         });
         fragmentList = new ArrayList<>();
         fragmentList.add(TeacherClassFragment.newInstance(1));
-        fragmentList.add(ScoreFragment.newInstance(1));
+        fragmentList.add(scoreFragment);
         fragmentList.add(SettingsFragment.newInstance(1));
 
         fragmentManager = getSupportFragmentManager();
 
+//        if (getIntent() != null && getIntent().getIntExtra("fragmentId", 0) != 0) {
+//            ShowFragment(getIntent().getStringExtra("fragmentId"));
+//        }
+//        Log.d("TAG", getIntent().toString());
+//        int position = getIntent().getIntExtra("fragmentId", 0);
         ShowFragment(0);
+//        navigationBar.selectTab(position);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,11 +129,12 @@ public class MainActivity extends BaseActivity
         courseItemList = listAllCourseData();
         TeacherClassFragment.setCourseItemList(courseItemList);
 
-        studentScoreItemList = listAllStudentScore();
+        studentScoreItemList = listAllStudentScore("0");
         Log.d("D", Integer.toString(courseItemList.size()));
         ScoreFragment.setStudentScoreItems(studentScoreItemList);
 
     }
+
 
     public void ShowFragment(int position) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -140,40 +148,40 @@ public class MainActivity extends BaseActivity
         db = dbHelper.getWritableDatabase();
     }
 
-    public void insertCourseData() {
-        ContentValues values = new ContentValues();
-        for (int i = 0; i < 5; i++) {
-            values.put("courseNo", i);
-            values.put("name", "course" + i);
-            values.put("capacity", 50);
-            db.insert("course", null, values);
-            values.clear();
-        }
-    }
-
-    public void insertStudentData() {
-        ContentValues values = new ContentValues();
-        for (int i = 0; i < 5; i++) {
-            values.put("studentNo", i);
-            values.put("name", "ZhangHao");
-            values.put("gender", "male");
-            values.put("age", 18);
-            values.put("grade", "2015");
-            db.insert("student", null, values);
-            values.clear();
-        }
-    }
-
-    public void insertStudentCourseData() {
-        ContentValues values = new ContentValues();
-        for (int i = 0; i < 5; i++) {
-            values.put("courseNo", 1);
-            values.put("studentNo", i);
-            values.put("score", Integer.toString((i + 60)));
-            db.insert("enroll", null, values);
-            values.clear();
-        }
-    }
+//    public void insertCourseData() {
+//        ContentValues values = new ContentValues();
+//        for (int i = 0; i < 50; i++) {
+//            values.put("courseNo", i);
+//            values.put("courseName", "course" + i);
+//            values.put("capacity", 50);
+//            db.insert("course", null, values);
+//            values.clear();
+//        }
+//    }
+//
+//    public void insertStudentData() {
+//        ContentValues values = new ContentValues();
+//        for (int i = 0; i < 50; i++) {
+//            values.put("studentNo", i);
+//            values.put("studentName", "ZhangHao");
+//            values.put("gender", "male");
+//            values.put("age", 18);
+//            values.put("grade", "2015");
+//            db.insert("student", null, values);
+//            values.clear();
+//        }
+//    }
+//
+//    public void insertStudentCourseData() {
+//        ContentValues values = new ContentValues();
+//        for (int i = 0; i < 50; i++) {
+//            values.put("courseNo", 1);
+//            values.put("studentNo", i);
+//            values.put("score", Integer.toString((i + 60)));
+//            db.insert("enroll", null, values);
+//            values.clear();
+//        }
+//    }
 
     public static List<CourseItem> listAllCourseData() {
         Cursor cursor = db.query("course", null, null, null, null, null, null);
@@ -181,9 +189,9 @@ public class MainActivity extends BaseActivity
         if (cursor.moveToFirst()) {
             do {
                 String courseNo = cursor.getString(cursor.getColumnIndex("courseNo"));
-                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String courseName = cursor.getString(cursor.getColumnIndex("courseName"));
                 int capacity = cursor.getInt(cursor.getColumnIndex("capacity"));
-                CourseItem courseItem = new CourseItem(courseNo, name, capacity);
+                CourseItem courseItem = new CourseItem(courseNo, courseName, capacity);
                 courseItemList.add(courseItem);
             } while (cursor.moveToNext());
         }
@@ -191,22 +199,21 @@ public class MainActivity extends BaseActivity
         return courseItemList;
     }
 
-    public List<StudentScoreItem> listAllStudentScore() {
-        Cursor cursor = db.rawQuery("SELECT enroll.courseNo, enroll.studentNo, course.name, student.name, enroll.score FROM enroll, student, course WHERE" +
-                " enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
+    public List<StudentScoreItem> listAllStudentScore(String courseNo) {
+        Cursor cursor = db.rawQuery("SELECT enroll.courseNo, enroll.studentNo, course.courseName, student.studentName, enroll.score FROM enroll, student, course WHERE" +
+                " enroll.studentNo = student.studentNo AND course.courseNo = enroll.courseNo AND enroll.courseNo = ?", new String[] {courseNo});
 //        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
 //        Cursor cursor = db.rawQuery("SELECT * FROM enroll INNER JOIN student, course ON enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
         List<StudentScoreItem> studentScoreItemList = new ArrayList<>();
-        for (String name : cursor.getColumnNames()) {
-            Log.d("name:", name);
-        }
+//        for (String name : cursor.getColumnNames()) {
+//            Log.d("name:", name);
+//        }
         if (cursor.moveToFirst()) {
             do {
-                String courseNo = cursor.getString(cursor.getColumnIndex("enroll.courseNo"));
-                String studentNo = cursor.getString(cursor.getColumnIndex("enroll.studentNo"));
-                String courseName = cursor.getString(cursor.getColumnIndex("course.name"));
-                String studentName = cursor.getString(cursor.getColumnIndex("student.name"));
-                int score = cursor.getInt(cursor.getColumnIndex("enroll.score"));
+                String studentNo = cursor.getString(cursor.getColumnIndex("studentNo"));
+                String courseName = cursor.getString(cursor.getColumnIndex("courseName"));
+                String studentName = cursor.getString(cursor.getColumnIndex("studentName"));
+                int score = cursor.getInt(cursor.getColumnIndex("score"));
                 StudentScoreItem studentScoreItem = new StudentScoreItem(studentNo, courseNo,
                         studentName, courseName, score);
                 studentScoreItemList.add(studentScoreItem);
@@ -245,6 +252,15 @@ public class MainActivity extends BaseActivity
             }
         }
         return null;
+    }
+
+    public BottomNavigationBar getNavigationBar() {
+        return navigationBar;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

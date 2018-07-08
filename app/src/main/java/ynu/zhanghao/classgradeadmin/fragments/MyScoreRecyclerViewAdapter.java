@@ -1,14 +1,22 @@
 package ynu.zhanghao.classgradeadmin.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.ActivityCollector;
+import ynu.zhanghao.classgradeadmin.ChangeActivity;
+import ynu.zhanghao.classgradeadmin.MainActivity;
 import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.StudentScoreItem;
 import ynu.zhanghao.classgradeadmin.fragments.ScoreFragment.OnListFragmentInteractionListener;
@@ -23,7 +31,6 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
 
     private final List<StudentScoreItem> mValues;
     private final OnListFragmentInteractionListener mListener;
-
 
 
     public MyScoreRecyclerViewAdapter(List<StudentScoreItem> items, OnListFragmentInteractionListener listener) {
@@ -56,11 +63,59 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
                 }
             }
         });
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showPopMenu(v, holder.getAdapterPosition());
+                return false;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void removeItem(int position) {
+        StudentScoreItem studentScoreItem = mValues.get(position);
+        SQLiteDatabase db = MainActivity.getDb();
+        db.delete("enroll", "studentNo = ? AND courseNo = ?",
+                new String[]{studentScoreItem.getStudentNo(), studentScoreItem.getClassNo()});
+        mValues.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void changeItem(int position) {
+        StudentScoreItem studentScoreItem = mValues.get(position);
+        Activity nowActivity = ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
+        Intent intent = new Intent(nowActivity, ChangeActivity.class);
+        intent.putExtra("studentNo", studentScoreItem.getStudentNo());
+        intent.putExtra("studentName", studentScoreItem.getStudentName());
+        intent.putExtra("courseNo", studentScoreItem.getClassNo());
+        intent.putExtra("score", studentScoreItem.getScore());
+        intent.putExtra("fragmentId", 2);
+        nowActivity.startActivity(intent);
+    }
+
+    public void showPopMenu(View view, final int pos) {
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_item, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.removeItem:
+                        MyScoreRecyclerViewAdapter.this.removeItem(pos);
+                        break;
+                    case R.id.changeItem:
+                        MyScoreRecyclerViewAdapter.this.changeItem(pos);
+                        break;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
