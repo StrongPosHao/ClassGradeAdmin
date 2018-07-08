@@ -52,6 +52,7 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
+    // 根据课程号添加学生成绩，会验证学生成绩
     protected void addStudentScore(final String courseNo) {
         Button confirmButton = findViewById(R.id.confirm);
         confirmButton.setOnClickListener(new View.OnClickListener() {
