@@ -43,7 +43,8 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getStudentNo());
-        holder.mContentView.setText(Integer.toString(mValues.get(position).getScore()));
+        holder.mContentView.setText(mValues.get(position).getStudentName());
+        holder.mScoreView.setText(Integer.toString(mValues.get(position).getScore()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +67,7 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final TextView mScoreView;
         public StudentScoreItem mItem;
 
         public ViewHolder(View view) {
@@ -73,6 +75,7 @@ public class MyScoreRecyclerViewAdapter extends RecyclerView.Adapter<MyScoreRecy
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.item_number);
             mContentView = (TextView) view.findViewById(R.id.content);
+            mScoreView = (TextView) view.findViewById(R.id.score);
         }
 
         @Override

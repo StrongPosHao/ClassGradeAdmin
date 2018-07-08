@@ -45,8 +45,16 @@ public class StudentScoreItem {
         this.score = score;
     }
 
+    public String getStudentName() {
+        return studentName;
+    }
+
     public void setStudentName(String studentName) {
         this.studentName = studentName;
+    }
+
+    public String getClassName() {
+        return className;
     }
 
     public void setClassName(String className) {

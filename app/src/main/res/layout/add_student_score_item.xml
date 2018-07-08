@@ -3,22 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="60dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
-            android:text="课程号："
+            android:text="学号："
             />
 
         <EditText
-            android:id="@+id/courseNo"
+            android:id="@+id/studentNo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -33,15 +33,15 @@
         android:layout_height="60dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
-            android:text="课程名："
+            android:text="姓名："
             />
 
         <EditText
-            android:id="@+id/courseName"
+            android:id="@+id/studentName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -54,15 +54,15 @@
         android:layout_height="60dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
-            android:text="课程人数："
+            android:text="成绩："
             />
 
         <EditText
-            android:id="@+id/courseCapacity"
+            android:id="@+id/studentScore"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

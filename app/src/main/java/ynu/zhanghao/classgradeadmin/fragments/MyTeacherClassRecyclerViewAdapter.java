@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -65,8 +63,9 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
-                    Log.d("C", mListener.toString());
-                    Toast.makeText(v.getContext(), "Selected", Toast.LENGTH_SHORT).show();
+//                    MainActivity mainActivity = (MainActivity) ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
+//                    mainActivity.ShowFragment(1);
+
                 }
             }
         });
@@ -116,8 +115,6 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
                     case R.id.changeItem:
                         MyTeacherClassRecyclerViewAdapter.this.changeItem(pos); break;
                 }
-
-
                 return false;
             }
         });

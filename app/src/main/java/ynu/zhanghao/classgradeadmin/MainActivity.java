@@ -105,6 +105,12 @@ public class MainActivity extends BaseActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddActivity.class);
+                Fragment currentFragment = getVisibleFragment();
+                if (currentFragment instanceof TeacherClassFragment) {
+                    intent.putExtra("fragmentId", 1);
+                } else if (currentFragment instanceof ScoreFragment){
+                    intent.putExtra("fragmentId", 2);
+                }
                 startActivity(intent);
             }
         });
@@ -122,7 +128,7 @@ public class MainActivity extends BaseActivity
 
     }
 
-    private void ShowFragment(int position) {
+    public void ShowFragment(int position) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = fragmentList.get(position);
         fragmentTransaction.replace(R.id.fragmentContainer, fragment);
@@ -186,17 +192,21 @@ public class MainActivity extends BaseActivity
     }
 
     public List<StudentScoreItem> listAllStudentScore() {
-        Cursor cursor = db.rawQuery("SELECT * FROM enroll, student, course WHERE" +
+        Cursor cursor = db.rawQuery("SELECT enroll.courseNo, enroll.studentNo, course.name, student.name, enroll.score FROM enroll, student, course WHERE" +
                 " enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
 //        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
+//        Cursor cursor = db.rawQuery("SELECT * FROM enroll INNER JOIN student, course ON enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
         List<StudentScoreItem> studentScoreItemList = new ArrayList<>();
+        for (String name : cursor.getColumnNames()) {
+            Log.d("name:", name);
+        }
         if (cursor.moveToFirst()) {
             do {
                 String courseNo = cursor.getString(cursor.getColumnIndex("enroll.courseNo"));
                 String studentNo = cursor.getString(cursor.getColumnIndex("enroll.studentNo"));
                 String courseName = cursor.getString(cursor.getColumnIndex("course.name"));
                 String studentName = cursor.getString(cursor.getColumnIndex("student.name"));
-                int score = cursor.getInt(cursor.getColumnIndex("score"));
+                int score = cursor.getInt(cursor.getColumnIndex("enroll.score"));
                 StudentScoreItem studentScoreItem = new StudentScoreItem(studentNo, courseNo,
                         studentName, courseName, score);
                 studentScoreItemList.add(studentScoreItem);
@@ -217,20 +227,6 @@ public class MainActivity extends BaseActivity
         return true;
     }
 
-//    public void removeItem(int position) {
-//        List<CourseItem> mValues = ;
-//        CourseItem courseItem = mValues.get(position);
-//        SQLiteDatabase db = MainActivity.getDb();
-//        db.delete("Course", "courseNo = ?", new String[]{courseItem.getCourseNo()});
-//        db.close();
-//        mValues.remove(position);
-//        notifyItemRemoved(position);
-//    }
-//
-//    public void changeItem(int position) {
-//        CourseItem courseItem = mValues.get(position);
-//        Intent intent = new Intent(MyApplication.th)
-//    }
 
     public static SQLiteDatabase getDb() {
         return db;
@@ -238,6 +234,17 @@ public class MainActivity extends BaseActivity
 
     public AppCompatActivity getMainActivity() {
         return MainActivity.this;
+    }
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible()) {
+                return fragment;
+            }
+        }
+        return null;
     }
 
     @Override
