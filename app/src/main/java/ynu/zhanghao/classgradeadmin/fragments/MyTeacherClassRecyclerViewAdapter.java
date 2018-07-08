@@ -33,6 +33,7 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
     private final List<CourseItem> mValues;
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
+
     public MyTeacherClassRecyclerViewAdapter(List<CourseItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
@@ -66,6 +67,7 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
                     MainActivity mainActivity = (MainActivity) ActivityCollector.activities.get(ActivityCollector.activities.size() - 1);
                     String courseNo = holder.mItem.getCourseNo();
                     ScoreFragment.setStudentScoreItems(mainActivity.listAllStudentScore(courseNo));
+                    mainActivity.setCourseNo(courseNo);
                     mainActivity.getNavigationBar().selectTab(1);
                     mainActivity.ShowFragment(1);
                 }
@@ -114,9 +116,11 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.removeItem:
-                        MyTeacherClassRecyclerViewAdapter.this.removeItem(pos); break;
+                        MyTeacherClassRecyclerViewAdapter.this.removeItem(pos);
+                        break;
                     case R.id.changeItem:
-                        MyTeacherClassRecyclerViewAdapter.this.changeItem(pos); break;
+                        MyTeacherClassRecyclerViewAdapter.this.changeItem(pos);
+                        break;
                 }
                 return false;
             }

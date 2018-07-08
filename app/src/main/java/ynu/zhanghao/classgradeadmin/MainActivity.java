@@ -1,5 +1,6 @@
 package ynu.zhanghao.classgradeadmin;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -51,6 +52,8 @@ public class MainActivity extends BaseActivity
     protected List<CourseItem> courseItemList;
 
     protected List<StudentScoreItem> studentScoreItemList;
+
+    private String courseNo;
 
     ScoreFragment scoreFragment = ScoreFragment.newInstance(1);
 
@@ -117,6 +120,7 @@ public class MainActivity extends BaseActivity
                     intent.putExtra("fragmentId", 1);
                 } else if (currentFragment instanceof ScoreFragment){
                     intent.putExtra("fragmentId", 2);
+                    intent.putExtra("courseNo", courseNo);
                 }
                 startActivity(intent);
             }
@@ -148,40 +152,40 @@ public class MainActivity extends BaseActivity
         db = dbHelper.getWritableDatabase();
     }
 
-//    public void insertCourseData() {
-//        ContentValues values = new ContentValues();
-//        for (int i = 0; i < 50; i++) {
-//            values.put("courseNo", i);
-//            values.put("courseName", "course" + i);
-//            values.put("capacity", 50);
-//            db.insert("course", null, values);
-//            values.clear();
-//        }
-//    }
-//
-//    public void insertStudentData() {
-//        ContentValues values = new ContentValues();
-//        for (int i = 0; i < 50; i++) {
-//            values.put("studentNo", i);
-//            values.put("studentName", "ZhangHao");
-//            values.put("gender", "male");
-//            values.put("age", 18);
-//            values.put("grade", "2015");
-//            db.insert("student", null, values);
-//            values.clear();
-//        }
-//    }
-//
-//    public void insertStudentCourseData() {
-//        ContentValues values = new ContentValues();
-//        for (int i = 0; i < 50; i++) {
-//            values.put("courseNo", 1);
-//            values.put("studentNo", i);
-//            values.put("score", Integer.toString((i + 60)));
-//            db.insert("enroll", null, values);
-//            values.clear();
-//        }
-//    }
+    public void insertCourseData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 50; i++) {
+            values.put("courseNo", i);
+            values.put("courseName", "course" + i);
+            values.put("capacity", 50);
+            db.insert("course", null, values);
+            values.clear();
+        }
+    }
+
+    public void insertStudentData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 50; i++) {
+            values.put("studentNo", i);
+            values.put("studentName", "ZhangHao");
+            values.put("gender", "male");
+            values.put("age", 18);
+            values.put("grade", "2015");
+            db.insert("student", null, values);
+            values.clear();
+        }
+    }
+
+    public void insertStudentCourseData() {
+        ContentValues values = new ContentValues();
+        for (int i = 0; i < 50; i++) {
+            values.put("courseNo", 1);
+            values.put("studentNo", i);
+            values.put("score", Integer.toString((i + 60)));
+            db.insert("enroll", null, values);
+            values.clear();
+        }
+    }
 
     public static List<CourseItem> listAllCourseData() {
         Cursor cursor = db.query("course", null, null, null, null, null, null);
@@ -256,6 +260,10 @@ public class MainActivity extends BaseActivity
 
     public BottomNavigationBar getNavigationBar() {
         return navigationBar;
+    }
+
+    public void setCourseNo(String courseNo) {
+        this.courseNo = courseNo;
     }
 
     @Override

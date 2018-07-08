@@ -23,7 +23,7 @@ public class AddActivity extends AppCompatActivity {
             addCourse();
         } else if (fragmentId == 2) {
             setContentView(R.layout.add_student_score_item);
-            addStudentScore();
+            addStudentScore(intent.getStringExtra("courseNo"));
         }
     }
 
@@ -52,7 +52,7 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
-    protected void addStudentScore() {
+    protected void addStudentScore(final String courseNo) {
         Button confirmButton = findViewById(R.id.confirm);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class AddActivity extends AppCompatActivity {
                 if (cursor.moveToFirst()) {
                     ContentValues values = new ContentValues();
                     values.put("studentNo", studentNo);
-                    values.put("courseNo", 1);
+                    values.put("courseNo", courseNo);
                     values.put("score", studentScore);
                     db.insert("enroll", null, values);
                     values.clear();
