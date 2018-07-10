@@ -24,6 +24,9 @@ public class AddActivity extends AppCompatActivity {
         } else if (fragmentId == 2) {
             setContentView(R.layout.add_student_score_item);
             addStudentScore(intent.getStringExtra("courseNo"));
+        } else if (fragmentId == 3) {
+            setContentView(R.layout.add_student_item);
+            addStudent();
         }
     }
 
@@ -44,7 +47,6 @@ public class AddActivity extends AppCompatActivity {
             values.put("courseName", courseName);
             values.put("capacity", capacity);
             db.insert("course", null, values);
-            db.close();
             values.clear();
             Intent intent = new Intent(AddActivity.this, MainActivity.class);
             startActivity(intent);
@@ -75,12 +77,38 @@ public class AddActivity extends AppCompatActivity {
                     values.put("score", studentScore);
                     db.insert("enroll", null, values);
                     values.clear();
-                    db.close();
                     Intent intent = new Intent(AddActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(AddActivity.this, "该学生不存在！请检查输入是否正确。", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    protected void addStudent() {
+        Button confirmButton = findViewById(R.id.confirm);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView studentNoText = findViewById(R.id.studentNo);
+                TextView studentNameText = findViewById(R.id.studentName);
+                TextView majorText = findViewById(R.id.major);
+                String studentNo = studentNoText.getText().toString();
+                String studentName = studentNameText.getText().toString();
+                String major = majorText.getText().toString();
+                SQLiteDatabase db = MainActivity.getDb();
+                ContentValues values = new ContentValues();
+                values.put("studentNo", studentNo);
+                values.put("studentName", studentName);
+                values.put("gender", "male");
+                values.put("age", 18);
+                values.put("grade", "2015");
+                values.put("major", major);
+                db.insert("student", null, values);
+                values.clear();
+                Intent intent = new Intent(AddActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }

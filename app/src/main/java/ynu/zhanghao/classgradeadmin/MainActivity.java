@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,14 +25,14 @@ import java.util.List;
 
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.db.MyDatabaseHelper;
+import ynu.zhanghao.classgradeadmin.db.StudentItem;
 import ynu.zhanghao.classgradeadmin.db.StudentScoreItem;
-import ynu.zhanghao.classgradeadmin.db.TeacherContent;
 import ynu.zhanghao.classgradeadmin.fragments.ScoreFragment;
-import ynu.zhanghao.classgradeadmin.fragments.SettingsFragment;
+import ynu.zhanghao.classgradeadmin.fragments.StudentFragment;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment;
 
 public class MainActivity extends BaseActivity
-        implements SettingsFragment.OnListFragmentInteractionListener,
+        implements StudentFragment.OnListFragmentInteractionListener,
         TeacherClassFragment.OnListFragmentInteractionListener,
         ScoreFragment.OnListFragmentInteractionListener {
 
@@ -52,6 +51,8 @@ public class MainActivity extends BaseActivity
     protected List<CourseItem> courseItemList;
 
     protected List<StudentScoreItem> studentScoreItemList;
+
+    protected List<StudentItem> studentItemList;
 
     private String courseNo;
 
@@ -75,7 +76,7 @@ public class MainActivity extends BaseActivity
         navigationBar = findViewById(R.id.navBar);
         navigationBar.addItem(new BottomNavigationItem(R.drawable.ic_school_black_24dp, "教学班"))
                 .addItem(new BottomNavigationItem(R.drawable.ic_event_note_black, "成绩"))
-                .addItem(new BottomNavigationItem(R.drawable.ic_settings_black_24dp, "设置"));
+                .addItem(new BottomNavigationItem(R.drawable.ic_group_black_24dp, "学生"));
         navigationBar.setFirstSelectedPosition(0);
         navigationBar.initialise();
 
@@ -98,17 +99,11 @@ public class MainActivity extends BaseActivity
         fragmentList = new ArrayList<>();
         fragmentList.add(TeacherClassFragment.newInstance(1));
         fragmentList.add(scoreFragment);
-        fragmentList.add(SettingsFragment.newInstance(1));
+        fragmentList.add(StudentFragment.newInstance(1));
 
         fragmentManager = getSupportFragmentManager();
 
-//        if (getIntent() != null && getIntent().getIntExtra("fragmentId", 0) != 0) {
-//            ShowFragment(getIntent().getStringExtra("fragmentId"));
-//        }
-//        Log.d("TAG", getIntent().toString());
-//        int position = getIntent().getIntExtra("fragmentId", 0);
         ShowFragment(0);
-//        navigationBar.selectTab(position);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +116,8 @@ public class MainActivity extends BaseActivity
                 } else if (currentFragment instanceof ScoreFragment){
                     intent.putExtra("fragmentId", 2);
                     intent.putExtra("courseNo", courseNo);
+                } else if (currentFragment instanceof StudentFragment) {
+                    intent.putExtra("fragmentId", 3);
                 }
                 startActivity(intent);
             }
@@ -134,8 +131,10 @@ public class MainActivity extends BaseActivity
         TeacherClassFragment.setCourseItemList(courseItemList);
 
         studentScoreItemList = listAllStudentScore("0");
-        Log.d("D", Integer.toString(courseItemList.size()));
         ScoreFragment.setStudentScoreItems(studentScoreItemList);
+
+        studentItemList = listAllStudent();
+        StudentFragment.setStudentList(studentItemList);
 
     }
 
@@ -206,12 +205,7 @@ public class MainActivity extends BaseActivity
     public List<StudentScoreItem> listAllStudentScore(String courseNo) {
         Cursor cursor = db.rawQuery("SELECT enroll.courseNo, enroll.studentNo, course.courseName, student.studentName, enroll.score FROM enroll, student, course WHERE" +
                 " enroll.studentNo = student.studentNo AND course.courseNo = enroll.courseNo AND enroll.courseNo = ?", new String[] {courseNo});
-//        Cursor cursor = db.query("enroll", null, null, null, null, null, null);
-//        Cursor cursor = db.rawQuery("SELECT * FROM enroll INNER JOIN student, course ON enroll.studentNo = student.studentNo AND enroll.courseNo = course.courseNo", null);
         List<StudentScoreItem> studentScoreItemList = new ArrayList<>();
-//        for (String name : cursor.getColumnNames()) {
-//            Log.d("name:", name);
-//        }
         if (cursor.moveToFirst()) {
             do {
                 String studentNo = cursor.getString(cursor.getColumnIndex("studentNo"));
@@ -225,6 +219,22 @@ public class MainActivity extends BaseActivity
         }
         cursor.close();
         return studentScoreItemList;
+    }
+
+    public List<StudentItem> listAllStudent() {
+        Cursor cursor = db.rawQuery("SELECT * FROM student", new String[]{});
+        List<StudentItem> studentItemList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                String studentNo = cursor.getString(cursor.getColumnIndex("studentNo"));
+                String studentName = cursor.getString(cursor.getColumnIndex("studentName"));
+                String major = cursor.getString(cursor.getColumnIndex("major"));
+                StudentItem studentItem = new StudentItem(studentNo, studentName, "male", 18, "2015", major);
+                studentItemList.add(studentItem);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return studentItemList;
     }
 
     @Override
@@ -277,7 +287,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onListFragmentInteraction(TeacherContent.TeacherItem item) {
+    public void onListFragmentInteraction(StudentItem item) {
 
     }
 

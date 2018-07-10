@@ -6,13 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
-//    private static final String CREATE_TEACHER = "CREATE TABLE IF NOT EXISTS teacher("
-//            + "teacherNo CHAR(5) PRIMARY KEY, "
-//            + "name VARCHAR(10), "
-//            + "gender VARCHAR(4), "
-//            + "age INTEGER, "
-//            + "email VARCHAR(64), "
-//            + "school VARCHAR(20))";
 
     private static final String CREATE_COURSE = "CREATE TABLE IF NOT EXISTS course("
             + "courseNo INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -24,7 +17,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + "studentName VARCHAR(10), "
             + "gender VARCHAR(4), "
             + "age INTEGER, "
-            + "grade CHAR(4))";
+            + "grade CHAR(4), "
+            + "major VARCHAR(20))";
 
     private static final String CREATE_ENROLL = "CREATE TABLE IF NOT EXISTS enroll("
             + "studentNo CHAR(11), "

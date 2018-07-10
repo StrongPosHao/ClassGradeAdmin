@@ -12,12 +12,16 @@ public class StudentItem {
 
     private String grade;
 
-    public StudentItem(String studentNo, String name, String gender, int age, String grade) {
+    private String major;
+
+    public StudentItem(String studentNo, String name, String gender, int age, String grade, String major) {
         this.studentNo = studentNo;
         this.name = name;
         this.gender = gender;
         this.age = age;
         this.grade = grade;
+        this.major = major;
+
     }
 
     public String getStudentNo() {
@@ -60,6 +64,13 @@ public class StudentItem {
         this.grade = grade;
     }
 
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
 
 }
 

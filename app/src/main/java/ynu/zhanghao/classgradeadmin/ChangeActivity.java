@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+// Add student Module
 public class ChangeActivity extends BaseActivity {
 
     @Override
@@ -24,6 +25,9 @@ public class ChangeActivity extends BaseActivity {
         } else if (fragmentId == 2) {
             setContentView(R.layout.add_student_score_item);
             changeStudentScore();
+        } else if (fragmentId == 3) {
+            setContentView(R.layout.add_student_item);
+            changeStudent();
         }
     }
 
@@ -96,7 +100,36 @@ public class ChangeActivity extends BaseActivity {
 
             }
         });
+    }
 
+    protected void changeStudent() {
+        final TextView studentNoText = findViewById(R.id.studentNo);
+        final TextView studentNameText = findViewById(R.id.studentName);
+        final TextView majorText = findViewById(R.id.major);
+
+        Intent intent = getIntent();
+        final String initStudentNo = intent.getStringExtra("studentNo");
+        final String initStudentName = intent.getStringExtra("studentName");
+        final String initMajor = intent.getStringExtra("major");
+
+        studentNoText.setText(initStudentNo);
+        studentNameText.setText(initStudentName);
+        majorText.setText(initMajor);
+
+        Button confirmButton = findViewById(R.id.confirm);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase db = MainActivity.getDb();
+                ContentValues values = new ContentValues();
+                values.put("studentNo", studentNoText.getText().toString());
+                values.put("studentName", studentNameText.getText().toString());
+                values.put("major", majorText.getText().toString());
+                db.update("student", values, "studentNo = ?", new String[]{initStudentNo});
+                Intent intent1 = new Intent(ChangeActivity.this, MainActivity.class);
+                startActivity(intent1);
+            }
+        });
     }
 
 

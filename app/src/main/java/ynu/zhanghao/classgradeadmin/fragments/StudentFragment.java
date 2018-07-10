@@ -15,7 +15,7 @@ import java.util.List;
 
 import ynu.zhanghao.classgradeadmin.MyApplication;
 import ynu.zhanghao.classgradeadmin.R;
-import ynu.zhanghao.classgradeadmin.db.TeacherContent;
+import ynu.zhanghao.classgradeadmin.db.StudentItem;
 
 /**
  * A fragment representing a list of Items.
@@ -23,30 +23,31 @@ import ynu.zhanghao.classgradeadmin.db.TeacherContent;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class SettingsFragment extends Fragment {
+public class StudentFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private static List<TeacherContent.TeacherItem> teacherList;
 
-    public static void setTeacherList(List<TeacherContent.TeacherItem> value) {
-        teacherList = value;
+    private static List<StudentItem> studentList;
+
+    public static void setStudentList(List<StudentItem> value) {
+        studentList = value;
     }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public SettingsFragment() {
+    public StudentFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static SettingsFragment newInstance(int columnCount) {
-        SettingsFragment fragment = new SettingsFragment();
+    public static StudentFragment newInstance(int columnCount) {
+        StudentFragment fragment = new StudentFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -65,7 +66,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_students_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -77,7 +78,7 @@ public class SettingsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MySettingsRecyclerViewAdapter(teacherList, mListener));
+            recyclerView.setAdapter(new MyStudentRecyclerViewAdapter(studentList, mListener));
         }
         return view;
     }
@@ -112,6 +113,6 @@ public class SettingsFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(TeacherContent.TeacherItem item);
+        void onListFragmentInteraction(StudentItem item);
     }
 }
