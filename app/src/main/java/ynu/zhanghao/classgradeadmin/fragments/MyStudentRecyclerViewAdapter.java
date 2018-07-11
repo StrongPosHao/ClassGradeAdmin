@@ -12,19 +12,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ynu.zhanghao.classgradeadmin.ActivityCollector;
-import ynu.zhanghao.classgradeadmin.ChangeActivity;
-import ynu.zhanghao.classgradeadmin.MainActivity;
 import ynu.zhanghao.classgradeadmin.R;
+import ynu.zhanghao.classgradeadmin.activity.ActivityCollector;
+import ynu.zhanghao.classgradeadmin.activity.ChangeActivity;
+import ynu.zhanghao.classgradeadmin.activity.MainActivity;
 import ynu.zhanghao.classgradeadmin.db.StudentItem;
 import ynu.zhanghao.classgradeadmin.fragments.StudentFragment.OnListFragmentInteractionListener;
-import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyStudentRecyclerViewAdapter extends RecyclerView.Adapter<MyStudentRecyclerViewAdapter.ViewHolder> {
 
     private final List<StudentItem> mValues;

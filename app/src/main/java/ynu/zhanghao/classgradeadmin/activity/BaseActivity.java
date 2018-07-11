@@ -1,4 +1,4 @@
-package ynu.zhanghao.classgradeadmin;
+package ynu.zhanghao.classgradeadmin.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

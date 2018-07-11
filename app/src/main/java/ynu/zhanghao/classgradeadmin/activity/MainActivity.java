@@ -1,4 +1,4 @@
-package ynu.zhanghao.classgradeadmin;
+package ynu.zhanghao.classgradeadmin.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import ynu.zhanghao.classgradeadmin.R;
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.db.MyDatabaseHelper;
 import ynu.zhanghao.classgradeadmin.db.StudentItem;

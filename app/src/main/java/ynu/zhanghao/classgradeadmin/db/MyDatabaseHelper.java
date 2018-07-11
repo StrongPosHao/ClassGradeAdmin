@@ -35,7 +35,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        db.execSQL(CREATE_TEACHER);
         db.execSQL(CREATE_COURSE);
         db.execSQL(CREATE_STUDENT);
         db.execSQL(CREATE_ENROLL);
@@ -43,10 +42,5 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL("DROP TABLE IF EXISTS TEACHER");
-//        db.execSQL("DROP TABLE IF EXISTS COURSE");
-//        db.execSQL("DROP TABLE IF EXISTS STUDENT");
-//        db.execSQL("DROP TABLE IF EXISTS ENROLL");
-//        onCreate(db);
     }
 }

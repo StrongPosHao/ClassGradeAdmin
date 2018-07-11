@@ -1,4 +1,4 @@
-package ynu.zhanghao.classgradeadmin;
+package ynu.zhanghao.classgradeadmin.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// Add student Module
+import ynu.zhanghao.classgradeadmin.R;
+
 public class ChangeActivity extends BaseActivity {
 
     @Override

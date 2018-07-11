@@ -15,19 +15,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ynu.zhanghao.classgradeadmin.ActivityCollector;
-import ynu.zhanghao.classgradeadmin.ChangeActivity;
-import ynu.zhanghao.classgradeadmin.MainActivity;
 import ynu.zhanghao.classgradeadmin.R;
+import ynu.zhanghao.classgradeadmin.activity.ActivityCollector;
+import ynu.zhanghao.classgradeadmin.activity.ChangeActivity;
+import ynu.zhanghao.classgradeadmin.activity.MainActivity;
 import ynu.zhanghao.classgradeadmin.db.CourseItem;
 import ynu.zhanghao.classgradeadmin.fragments.TeacherClassFragment.OnListFragmentInteractionListener;
-import ynu.zhanghao.classgradeadmin.fragments.dummy.DummyContent.DummyItem;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTeacherClassRecyclerViewAdapter.ViewHolder> {
 
     private final List<CourseItem> mValues;
@@ -43,7 +38,6 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_teacherclass, parent, false);
-//        final ViewHolder holder = new ViewHolder(view);
         return new ViewHolder(view);
     }
 
@@ -55,7 +49,6 @@ public class MyTeacherClassRecyclerViewAdapter extends RecyclerView.Adapter<MyTe
         holder.mIdView.setText(mValues.get(position).getCourseNo());
         holder.mContentView.setText(mValues.get(position).getName());
 
-//        Log.d("E", mValues.get(position).getCapacity());
         holder.mCapacityView.setText(Integer.toString(mValues.get(position).getCapacity()));
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

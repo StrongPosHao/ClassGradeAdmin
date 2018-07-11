@@ -1,4 +1,4 @@
-package ynu.zhanghao.classgradeadmin;
+package ynu.zhanghao.classgradeadmin.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,25 +11,32 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ynu.zhanghao.classgradeadmin.R;
+
 public class AddActivity extends AppCompatActivity {
 
+    /**
+     * 会根据传入的fragmentId来决定加载那个布局文件以及添加何种数据
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         int fragmentId = intent.getIntExtra("fragmentId", 0);
-        if (fragmentId == 1) {
+        if (fragmentId == 1) {  // 添加课程
             setContentView(R.layout.add_class_item);
             addCourse();
-        } else if (fragmentId == 2) {
+        } else if (fragmentId == 2) {   // 添加成绩
             setContentView(R.layout.add_student_score_item);
             addStudentScore(intent.getStringExtra("courseNo"));
-        } else if (fragmentId == 3) {
+        } else if (fragmentId == 3) {   // 添加学生
             setContentView(R.layout.add_student_item);
             addStudent();
         }
     }
 
+    // 用于添加课程
     protected void addCourse() {
         Button confirmButton = findViewById(R.id.confirm);
         confirmButton.setOnClickListener(new View.OnClickListener() {
